@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.maaxgr.calculatorapp.ui.api
+package de.maaxgr.calculatorapp.api
 
 import android.app.Application
 import android.util.Log
@@ -90,4 +90,5 @@ open class MviViewModel<STATE, EFFECT, EVENT>(application: Application) :
         super.onCleared()
         Log.d(TAG, "onCleared")
     }
+
 }

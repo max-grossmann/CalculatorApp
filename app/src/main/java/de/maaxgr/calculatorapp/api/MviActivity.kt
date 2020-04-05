@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.maaxgr.calculatorapp.ui.api
+package de.maaxgr.calculatorapp.api
 
 import android.os.Bundle
 import android.util.Log
@@ -35,7 +35,7 @@ import androidx.lifecycle.Observer
 abstract class MviActivity<STATE, EFFECT, EVENT, ViewModel : MviViewModel<STATE, EFFECT, EVENT>> :
     AppCompatActivity() {
 
-    abstract val viewModel: ViewModel
+    abstract val vm: ViewModel
 
     private val viewStateObserver = Observer<STATE> {
         Log.d(TAG, "observed viewState : $it")
@@ -50,8 +50,8 @@ abstract class MviActivity<STATE, EFFECT, EVENT, ViewModel : MviViewModel<STATE,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Registering observers
-        viewModel.viewStates().observe(this, viewStateObserver)
-        viewModel.viewEffects().observe(this, viewEffectObserver)
+        vm.viewStates().observe(this, viewStateObserver)
+        vm.viewEffects().observe(this, viewEffectObserver)
     }
 
     abstract fun renderViewState(viewState: STATE)

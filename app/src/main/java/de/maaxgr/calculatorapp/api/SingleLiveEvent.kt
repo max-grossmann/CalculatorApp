@@ -1,4 +1,4 @@
-package de.maaxgr.calculatorapp.ui.api
+package de.maaxgr.calculatorapp.api
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner

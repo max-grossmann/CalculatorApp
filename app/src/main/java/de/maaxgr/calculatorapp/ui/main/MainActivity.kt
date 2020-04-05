@@ -1,43 +1,63 @@
 package de.maaxgr.calculatorapp.ui.main
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import de.maaxgr.architecturecompoenentutilities.activityBinding
 import de.maaxgr.architecturecompoenentutilities.enable
 import de.maaxgr.calculatorapp.R
 import de.maaxgr.calculatorapp.databinding.ActivityMainBinding
-import de.maaxgr.calculatorapp.ui.api.MviActivity
-import de.maaxgr.calculatorapp.utils.setOnClickListener
+import de.maaxgr.calculatorapp.api.MviActivity
+import de.maaxgr.calculatorapp.utils.processEventOnClick
+import de.maaxgr.calculatorapp.utils.tagAsChar
 
 class MainActivity : MviActivity<MainViewState, MainViewEffect, MainViewEvent, MainViewModel>() {
 
 
-    override val viewModel: MainViewModel by viewModels()
-    private val binding: ActivityMainBinding by activityBinding<ActivityMainBinding>(R.layout.activity_main)
+    override val vm: MainViewModel by viewModels()
+    private val b: ActivityMainBinding by activityBinding(R.layout.activity_main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.enable(this)
+        b.enable(this)
 
-        with(binding) {
+        with(b) {
             setOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9)
-                .setOnClickListener { viewModel.process(MainViewEvent.NumberInputEvent(it.tag as String)) }
+                .processEventOnClick(vm) {
+                    MainViewEvent.NumberInputEvent(it.tagAsChar)
+                }
 
             setOf(btnPlus, btnMinus, btnMultiply, btnDivide)
-                .setOnClickListener { viewModel.process(MainViewEvent.OperatorInputEvent(it.tag as String)) }
+                .processEventOnClick(vm) {
+                    MainViewEvent.OperatorInputEvent(it.tagAsChar)
+                }
 
-            btnClear.setOnClickListener { viewModel.process(MainViewEvent.ClearInputEvent) }
-            btnSubmit.setOnClickListener { viewModel.process(MainViewEvent.EvaluateInputEvent) }
+            btnClear.processEventOnClick(vm, MainViewEvent.ClearInputEvent)
+            btnSubmit.processEventOnClick(vm, MainViewEvent.EvaluateInputEvent)
         }
-
     }
 
-    override fun renderViewState(viewState: MainViewState) {
-        binding.tvInput.text = viewState.expression
+    override fun renderViewState(viewState: MainViewState) = with(b) {
+        tvInput.text = viewState.expression
     }
 
     override fun renderViewEffect(viewEffect: MainViewEffect) {
-
+        when (viewEffect) {
+            is MainViewEffect.OperatorCurrentlyNotSupported -> {
+                Toast.makeText(
+                    this,
+                    "This operator is currently not supported",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            is MainViewEffect.CanNotStartWithOperator -> {
+                Toast.makeText(
+                    this,
+                    "First symbol has to be a number!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 }

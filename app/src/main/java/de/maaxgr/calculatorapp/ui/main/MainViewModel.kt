@@ -1,10 +1,16 @@
 package de.maaxgr.calculatorapp.ui.main
 
 import android.app.Application
-import de.maaxgr.calculatorapp.ui.api.MviViewModel
+import de.maaxgr.calculatorapp.api.MviViewModel
 import de.maaxgr.calculatorapp.utils.BigNumberCalculator
+import de.maaxgr.calculatorapp.utils.containsNot
 
 class MainViewModel(application: Application) : MviViewModel<MainViewState, MainViewEffect, MainViewEvent>(application) {
+
+    companion object Constants {
+        val SUPPORTED_OPERATORS = setOf('+')
+        val OPERATORS = setOf('*', '/', '+', '-')
+    }
 
     init {
         viewState = MainViewState("")
@@ -22,11 +28,32 @@ class MainViewModel(application: Application) : MviViewModel<MainViewState, Main
     }
 
     private fun numberInput(viewEvent: MainViewEvent.NumberInputEvent) {
-        viewState = MainViewState(viewState.expression + viewEvent.numberText)
+        viewState = MainViewState(viewState.expression + viewEvent.numberChar)
     }
 
-    private fun operatorInput(viewEvent: MainViewEvent.OperatorInputEvent) {
-        viewState = MainViewState(viewState.expression + viewEvent.operatorText)
+    private fun operatorInput(event: MainViewEvent.OperatorInputEvent) {
+        if (SUPPORTED_OPERATORS.containsNot(event.operatorChar)) {
+            viewEffect = MainViewEffect.OperatorCurrentlyNotSupported(event.operatorChar)
+            return
+        }
+
+        val lastChar = viewState.expression.lastOrNull()
+
+        if (lastChar == null) {
+            viewEffect = MainViewEffect.CanNotStartWithOperator
+            return
+        }
+
+        var newExpression = viewState.expression
+
+        //tmp remove last character if already a operator => only one operator should be set
+        if (OPERATORS.contains(lastChar)) {
+            newExpression = newExpression.dropLast(1)
+        }
+
+        newExpression += event.operatorChar
+
+        viewState = MainViewState(newExpression)
     }
 
     private fun clearInput() {
@@ -34,10 +61,10 @@ class MainViewModel(application: Application) : MviViewModel<MainViewState, Main
     }
 
     private fun evaluateInput() {
-        val addendos = viewState.expression.split("+")
+        val addends = viewState.expression.split("+")
         val calc = BigNumberCalculator()
 
-        val sum = calc.addStrings(addendos)
+        val sum = calc.addStrings(addends)
         viewState = MainViewState(sum)
     }
 

@@ -1,4 +1,4 @@
-package de.maaxgr.calculatorapp.ui.api
+package de.maaxgr.calculatorapp.api
 
 internal val Any.TAG: String
     get() {
