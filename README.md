@@ -8,10 +8,6 @@
 * in practise the size of the number is limited by the size of the text-container in the ui
 * app architecture is Model View Intent (MVI) 
 
-## Screenshots
-| Enter huge addition | Klick "=" and see the result | 
-| ------------- |:-------------:| 
-| ![alt text](documentation/img/Screenshot_20200405-172031.jpg "Logo Title Text 1")| ![alt text](documentation/img/Screenshot_20200405-172037.jpg "Logo Title Text 1")
 
 ## Interesting classes
 * [BigNumberCalculator implementation](app/src/main/java/de/maaxgr/calculatorapp/utils/BigNumberCalculator.kt)
