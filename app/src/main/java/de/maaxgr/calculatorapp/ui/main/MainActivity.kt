@@ -50,14 +50,6 @@ class MainActivity : MviActivity<MainViewState, MainViewEffect, MainViewEvent, M
                     "This operator is currently not supported",
                     Toast.LENGTH_SHORT
                 ).show()
-            }
-            is MainViewEffect.CanNotStartWithOperator -> {
-                Toast.makeText(
-                    this,
-                    "First symbol has to be a number!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+            } }
     }
 }

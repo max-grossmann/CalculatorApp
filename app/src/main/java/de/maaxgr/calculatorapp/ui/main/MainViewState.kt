@@ -10,7 +10,6 @@ data class MainViewState(
 
 sealed class MainViewEffect {
     data class OperatorCurrentlyNotSupported(val operator: Char): MainViewEffect()
-    object CanNotStartWithOperator : MainViewEffect()
 }
 
 sealed class MainViewEvent {
