@@ -39,7 +39,7 @@ class MainActivity : MviActivity<MainViewState, MainViewEffect, MainViewEvent, M
     }
 
     override fun renderViewState(viewState: MainViewState) = with(b) {
-        tvInput.text = viewState.expression
+        tvInput.text = viewState.visibleNumber
     }
 
     override fun renderViewEffect(viewEffect: MainViewEffect) {
